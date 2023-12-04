@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
+import db
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -29,6 +30,10 @@ fake_users_db = {
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class UserSignUp(BaseModel):
+    username: str
+    password: str
 
 
 class TokenData(BaseModel):
@@ -157,3 +162,7 @@ async def read_own_items(
     current_user: Annotated[User, Depends(get_current_active_user)]
 ):
     return [{"item_id": "Foo", "owner": current_user.username}]
+
+@app.post("/create-user")
+async def create_user(data: UserSignUp):
+    db.create_user(data.username, data.password)
