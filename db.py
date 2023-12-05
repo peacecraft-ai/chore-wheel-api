@@ -15,3 +15,14 @@ def create_user(username, password):
             (%s, %s)""",
         (username, pwd_context.hash(password))
     )
+
+def get_user_with_username(username):
+    cur.execute("""
+        select
+            user_id
+        from
+            tuser
+        where
+            username = %s""",
+        (username,))
+    return cur.fetchone()

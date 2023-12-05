@@ -8,6 +8,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 import db
+import re
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -165,4 +166,15 @@ async def read_own_items(
 
 @app.post("/create-user")
 async def create_user(data: UserSignUp):
+    existingUsername = db.get_user_with_username(data.username)
+
+    if(existingUsername):
+        raise HTTPException(status_code=400, detail="That username is taken")
+
+    if not re.fullmatch("^[A-Za-z0-9-]{4,16}$", data.username):
+        raise HTTPException(status_code=400, detail="Username must be 4-16 characters, letters, numbers and dashes only")
+
+    if not re.fullmatch("^.{7,100}$", data.password):
+        raise HTTPException(status_code=400, detail="Password must be 7-100 characters")
+
     db.create_user(data.username, data.password)
