@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 conn = psycopg.connect(
-    "host=localhost dbname=chore_wheel user=wheel password=wheel port=5432",
+    "host=db dbname=chore_wheel user=wheel password=wheel port=5432",
     row_factory=dict_row)
 
 conn.autocommit = True
