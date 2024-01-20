@@ -1,10 +1,11 @@
 import psycopg
 from psycopg.rows import dict_row
 from passlib.context import CryptContext
+import settings as s
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 conn = psycopg.connect(
-    "host=db dbname=chore_wheel user=wheel password=wheel port=5432",
+    f"host={s.DB_HOST} dbname=chore_wheel user=wheel password=wheel port=5432",
     row_factory=dict_row)
 
 conn.autocommit = True
